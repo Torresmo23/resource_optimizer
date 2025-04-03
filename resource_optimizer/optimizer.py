@@ -13,7 +13,9 @@ def optimize_allocation(data, budget):
     model += lpSum([price * var for item, price, var in items])
     model += lpSum([price * var for item, price, var in items]) <= budget
 
-    model.solve()
+    # 👇 This forces the use of the built-in CBC solver without requiring system access
+    solver = PULP_CBC_CMD(msg=False)
+    model.solve(solver)
 
     result = {item: var.varValue for item, price, var in items}
     return result
